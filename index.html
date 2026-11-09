@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sam iPhone Calculator</title>
+<style>
+* { box-sizing: border-box; }
+body { background: hwb(249 0% 84%); color: white; font-family: Arial; margin: 0; padding: 15px; text-align: center; }
+.top { display: flex; justify-content: space-between; align-items: center; max-width: 380px; margin: auto; }
+.top button { background: none; border: none; color: #ff9f0a; font-size: 22px; }
+#display { width: 100%; max-width: 380px; background: hwb(346 1% 80%); color: white; border: none; font-size: 70px; text-align: right; padding: 20px 10px; outline: none; }
+.calc { max-width: 380px; margin: auto; }
+.buttons { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+button { height: 70px; border-radius: 50%; border: none; font-size: 26px; cursor: pointer; color: white; background: #333; }
+button:active { opacity: 0.6; }
+.gray { background: #a5a5a5; color: black; }
+.orange { background: #ff9f0a; font-size: 30px; }
+.orange-big { background: #ff9f0a; border-radius: 35px; }
+.zero { grid-column: span 2; border-radius: 35px; text-align: left; padding-left: 28px; }
+/* Scientific part - e dey hide first */
+#sciBox { display: none; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+#sciBox button { height: 45px; border-radius: 25px; font-size: 16px; background: #1c1c1e; color: #ff9f0a; }
+#sciBox .active { background: #ff9f0a; color: white; }
+#toggleBtn { background: #333; width: 70px; height: 70px; border-radius: 50%; font-size: 20px; color: #ff9f0a; }
+</style>
+</head>
+<body>
+
+<h1>CALCULATOR SAMUEL</h1>
+<div class="top">
+<span style="color:#ffffff;">SAM CALCULATOR</span>
+<span>⏱️</span>
+</div>
+
+<input type="text" id="display" readonly value="0">
+
+<div class="calc">
+
+<!-- SCIENTIFIC - HIDDEN FIRST, LIKE IPHONE -->
+<div id="sciBox">
+<button id="btn2nd" onclick="toggle2nd()">2nd</button>
+<button id="btnDeg" onclick="toggleDeg()">deg</button>
+<button onclick="doSin()">sin</button>
+<button onclick="doCos()">cos</button>
+<button onclick="doTan()">tan</button>
+<button onclick=
+
+<button onclick="doPower()">xʸ</button>
+<button onclick="doLog()">lg</button>
+<button onclick="doLn()">ln</button>
+<button onclick="addToDisplay('(')">(</button>
+<button onclick="addToDisplay(')')">)</button>
+
+<button onclick="doSqrt()">√x</button>
+<button onclick="clearDisplay()">AC</button>
+<button onclick="deleteOne()">⌫</button>
+<button onclick="addToDisplay('%')">%</button>
+<button onclick="addToDisplay('/')">÷</button>
+
+<button onclick="doFactorial()">x!</button>
+<button onclick="addToDisplay('7')">7</button>
+<button onclick="addToDisplay('8')">8</button>
+<button onclick="addToDisplay('9')">9</button>
+<button onclick="addToDisplay('*')">×</button>
+
+<button onclick="doInverse()">1/x</button>
+<button onclick="addToDisplay('4')">4</button>
+<button onclick="addToDisplay('5')">5</button>
+<button onclick="addToDisplay('6')">6</button>
+<button onclick="addToDisplay('-')">-</button>
+
+<button onclick="addToDisplay('3.14159')">π</button>
+<button onclick="addToDisplay('1')">1</button>
+<button onclick="addToDisplay('2')">2</button>
+<button onclick="addToDisplay('3')">3</button>
+<button onclick="addToDisplay('+')">+</button>
+
+<button onclick="toggleSci()" style="background:#333; color:white;">⇅</button>
+<button onclick="addToDisplay('2.71828')">e</button>
+<button onclick="addToDisplay('0')">0</button>
+<button onclick="addToDisplay('.')">.</button>
+<button onclick="calculate()" style="background:#ff9f0a; color:white;">=</button>
+</div>
+
+<!-- NORMAL - LIKE YOUR VIDEO -->
+<div class="buttons" id="normalBox">
+<button onclick="clearDisplay()" class="gray">AC</button>
+<button onclick="deleteOne()" class="gray">⌫</button>
+<button onclick="addToDisplay('%')" class="gray">%</button>
+<button onclick="addToDisplay('/')" class="orange">÷</button>
+
+<button onclick="addToDisplay('7')">7</button>
+<button onclick="addToDisplay('8')">8</button>
+<button onclick="addToDisplay('9')">9</button>
+<button onclick="addToDisplay('*')" class="orange">×</button>
+
+<button onclick="addToDisplay('4')">4</button>
+<button onclick="addToDisplay('5')">5</button>
+<button onclick="addToDisplay('6')">6</button>
+<button onclick="addToDisplay('-')" class="orange">-</button>
+
+<button onclick="addToDisplay('1')">1</button>
+<button onclick="addToDisplay('2')">2</button>
+<button onclick="addToDisplay('3')">3</button>
+<button onclick="addToDisplay('+')" class="orange">+</button>
+
+<button id="toggleBtn" onclick="toggleSci()">⇅</button>
+<button onclick="addToDisplay('0')">0</button>
+<button onclick="addToDisplay('.')">.</button>
+<button onclick="calculate()" class="orange">=</button>
+</div>
+
+</div>
+<p style="color:#666;">Swipe style like iPhone - Press ⇅ to open Scientific</p>
+
+<script>
+let display = document.getElementById("display");
+let isSecond = false;
+let isDeg = true;
+
+function addToDisplay(v){
+  if(display.value=="0" && v!="." ) display.value="";
+  display.value += v;
+}
+function clearDisplay(){ display.value="0"; }
+function deleteOne(){
+  display.value = display.value.slice(0,-1);
+  if(display.value=="") display.value="0";
+}
+function calculate(){
+  try{ display.value = eval(display.value); }
+  catch(e){ display.value="Error"; }
+}
+function toggleSci(){
+  let sci = document.getElementById("sciBox");
+  let normal = document.getElementById("normalBox");
+  if(sci.style.display=="grid"){
+    sci.style.display="none";
+    normal.style.display="grid";
+  } else {
+    sci.style.display="grid";
+    normal.style.display="none";
+  }
+}
+function toggle2nd(){
+  isSecond = !isSecond;
+  document.getElementById("btn2nd").classList.toggle("active");
+  alert(isSecond ? "2nd ON - sin go become sin⁻¹" : "2nd OFF");
+}
+function toggleDeg(){
+  isDeg = !isDeg;
+  document.getElementById("btnDeg").innerHTML = isDeg ? "deg" : "rad";
+}
+function toRad(x){ return isDeg ? x * Math.PI/180 : x; }
+function doSin(){
+  let v = Number(display.value);
+  display.value = isSecond ? Math.asin(v)*180/Math.PI : Math.sin(toRad(v));
+}
+function doCos(){
+  let v = Number(display.value);
+  display.value = isSecond ? Math.acos(v)*180/Math.PI : Math.cos(toRad(v));
+}
+function doTan(){
+  let v = Number(display.value);
+  display.value = isSecond ? Math.atan(v)*180/Math.PI : Math.tan(toRad(v));
+}
+function doSqrt(){ display.value = Math.sqrt(display.value); }
+function doPower(){ display.value += "**"; }
+function doLog(){ display.value = Math.log10(display.value); }
+function doLn(){ display.value = Math.log(display.value); }
+function doInverse(){ display.value = 1 / display.value; }
+function doFactorial(){
+  let n = Number(display.value); let f=1;
+  for(let i=1;i<=n;i++) f=f*i;
+  display.value=f;
+}
+</script>
+</body>
+</html>
